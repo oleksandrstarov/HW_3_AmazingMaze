@@ -1,0 +1,83 @@
+*{
+  box-sizing: border-box;
+}
+
+body{
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* IE/Edge */
+  user-select: none;           /* non-prefixed version, currently
+                                  not supported by any browser */
+}
+
+
+
+
+.mazeContainer{
+  margin-top: 60px;
+  clear: left;
+}
+
+.button{
+  width: 150px;
+  cursor: pointer;
+  background: linear-gradient(to top, white, lightgray);
+}
+
+.cell{
+  width: 25px;
+  height: 25px;
+  /*border:1px solid black;*/
+  float: left;
+  background: linear-gradient(to top right, white, lightblue);
+  margin: 0px;
+  /*text-align: center;*/
+ /* padding: 6px;*/
+  /*cursor: pointer;*/
+}
+
+div.borderNorth{
+
+    border-top: 3px solid black;
+}
+
+div.borderEast{
+    border-right: 3px solid black;
+    
+}
+
+div.borderSouth{
+    border-bottom: 3px solid black;
+
+}
+
+div.borderWest{
+    border-left: 3px solid black;
+ 
+}
+
+
+div.cell[clicked]{
+  background: linear-gradient(to top right, white, lightgray);
+}
+
+
+.gameMenu{
+  float: left;
+  margin-right: 10px;
+}
+
+#gameMenu{
+  
+}
+
+#bombsLeft{
+  width: 30px;
+  height: 20px;
+  border: 1px solid black;
+  text-align: center;
+  border-radius: 5px;
+}
+
