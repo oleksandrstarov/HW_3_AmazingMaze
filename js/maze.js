@@ -4,89 +4,161 @@ function Maze(dimension){
     this.dimension = dimension;
     
     this.cellsArray = [];
-    var count = 0;
+    this.solution = [];
+}
+
+Maze.prototype = {
+    createCells: function(){
+        var count = 0;
     
-    
-    this.createCells = function(){
         var cellsArray = [];
-        for(var i = 0; i<this.dimension+2; i++){
-            cellsArray.push([]);
-        }
         
-        
-        for(var i = 0; i < this.dimension+2; i++){
-            for(var j = 0; j < this.dimension+2; j++){
-                var cell = new MazeCell(i, j);
-                cellsArray[i].push(cell);
-               cell.count = count++;
+        for(var i = 0; i < this.dimension; i++){
+            cellsArray[i] = [];
+            for(var j = 0; j < this.dimension; j++){
                 
-               //set all border cells as visited
-                if(i === 0 
-                || i === this.dimension + 1
-                || j === 0
-                || j === this.dimension + 1){
-                    cell.visited = true;
-                }
+                var cell = new MazeCell(j, i);
+                cellsArray[i][j] = cell;
+                cell.count = count++;
+                
             }
         }
-        console.log(cellsArray);
+        //console.log(cellsArray);
         return this.initMaze(cellsArray);
-    }
+    },
     
-    
-    this.initMaze = function(cellsArray){
+    initMaze: function(cellsArray){
+        var path = [];
+        var solution = [];
+        
         if(cellsArray.length === 0){
             return;
         }
         
-        function generateMaze(x, y){
+        var x = 1, y = 1;
+        var lastSetX = -1, lastSetY = -1;
+        cellsArray[x][y].wall = false;
         
-            cellsArray[x][y].visited = true;
+        path.push(y + y * cellsArray.length);
+        var solutionUncomplete = true;
+        
+        function generateMaze(x, y){
             
-            while(!cellsArray[x][y+1].visited || !cellsArray[x+1][y].visited
-            || !cellsArray[x][y-1].visited || !cellsArray[x-1][y].visited){
+            //console.log(x + " " + y); 
+            if(path.length){
+                var availableDirections = getDirections(x, y, cellsArray);
                 
-                while(true){
-                    var random = getRandom(4);
-                    if(random === 0 && !cellsArray[x][y+1].visited){
-                        cellsArray[x][y].north = false;
-                        cellsArray[x][y+1].south = false;
-                        generateMaze(x, y+1);
-                        break;
+                if(availableDirections){
+                    var step = getRandom(availableDirections.length);
+                    
+                    switch(availableDirections[step]){
+                        case "N":
+                            removeWall(x-2, y, cellsArray);
+                            removeWall(x-1, y, cellsArray);
+                            x -= 2;
+                            break;
+                        
+                        case "S":
+                            removeWall(x+2, y, cellsArray);
+                            removeWall(x+1, y, cellsArray);
+                            x += 2;
+                            break;
+                        
+                        case "W":
+                            removeWall(x, y-2, cellsArray);
+                            removeWall(x, y-1, cellsArray);
+                            y -= 2;
+                            break;
+                        
+                        case "E":
+                            removeWall(x, y+2, cellsArray);
+                            removeWall(x, y+1, cellsArray);
+                            y += 2;
+                            break;
                     }
                     
-                    if(random === 1 && !cellsArray[x+1][y].visited){
-                        cellsArray[x][y].east = false;
-                        cellsArray[x+1][y].west = false;
-                        generateMaze(x+1, y);
-                        break;
+                    path.push(y + x * cellsArray.length);
+                    //solution.push(cellsArray[x][y]);
+                    lastSetX = x;
+                    lastSetY = y;
+                    if(x === cellsArray.length-2 && y === cellsArray.length-2){
+                        //console.info(solutionUncomplete);
+                        solutionUncomplete = false;
+                        //console.info(solutionUncomplete);
+                    }
+                    //console.log(solution);
+                    
+                }else{
+                    var stepBack = path.pop();
+                    
+                    
+                    x = Math.floor(stepBack / cellsArray.length);
+                    y = stepBack % cellsArray.length;
+                   
+                    //console.log(solutionUncomplete);
+                    if(solutionUncomplete){
+                        if(solution.indexOf(cellsArray[x][y]) >= 0 ){
+                            //console.log(solution.pop());
+                            //console.log(solution.pop());
+                            solution.pop();
+                            solution.pop();
+                            
+    
+    
+    
+                        }
                     }
                     
-                     
-                    if(random === 2 && !cellsArray[x][y-1].visited){
-                        cellsArray[x][y].south = false;
-                        cellsArray[x][y-1].north = false;
-                        generateMaze(x, y-1);
-                        break;
-                    }
-                    
-                    if(random === 3 && !cellsArray[x-1][y].visited){
-                        cellsArray[x][y].west = false;
-                        cellsArray[x-1][y].east = false;
-                        generateMaze(x-1, y);
-                        break;
-                    }
                 }
+            generateMaze(x, y);
+                
             }
-            
-
         }
         
-        generateMaze(1,1);
+        generateMaze(x, y);
+        this.solution = solution;
         return cellsArray
+        
+        function getDirections(x, y, cellsArray){
+            var availableDirections = "";
+            
+            if(x+2 > 0 
+                && x+2 < cellsArray.length - 1
+                && cellsArray[x+2][y].wall === true){
+                availableDirections += "S";
+            }
+            
+            if(x-2 > 0 
+                && x-2 < cellsArray.length - 1 
+                && cellsArray[x-2][y].wall === true){
+                availableDirections += "N";
+            }
+            
+            if(y-2 > 0 
+                && y-2 < cellsArray.length - 1 
+                && cellsArray[x][y-2].wall === true){
+                availableDirections += "W";
+            }
+            
+            if(y+2 > 0 
+                && y+2 < cellsArray.length - 1
+                && cellsArray[x][y+2].wall === true){
+                availableDirections += "E";
+            }
+            
+            return availableDirections;
+        }
+        
+        function removeWall(x, y, cellsArray){
+            cellsArray[x][y].wall = false;
+            if(solutionUncomplete){
+                solution.push(cellsArray[x][y]);
+            }
+        }
+        
     }
     
-    
-    
-}
 
+    
+    
+};
