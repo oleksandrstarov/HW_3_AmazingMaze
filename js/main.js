@@ -1,19 +1,20 @@
 "use strict";
 
 
-var maze = new Maze(11);
-
+var maze = new Maze('small');
 var array = maze.cellsArray;
+maze.showMazeField(array);
+maze.initMaze(array);
 
 //console.log(array);
-array = maze.createCells();
-console.log(maze.solution);
+//array = maze.createCells();
+//maze.findSolution(array);
 //console.log(array);
 
 
-var container = document.querySelector('.mazeContainer');
+//var container = document.querySelector('.mazeContainer');
 
-generatePlayField(array, container);
+//generatePlayField(array, container);
 function generatePlayField(array, container){
    
     
@@ -34,6 +35,9 @@ function generatePlayField(array, container){
             container.appendChild(element);
         }
     }
+    
+    
+    
     drawEntryPoint(array[1][1]);
     drawEntryPoint(array[array.length - 2][array.length - 2]);
     
@@ -50,6 +54,7 @@ function drawWalls(cell, element){
     if(!cell.wall){
         element.classList.add('passage');
     }
+    
 }
 
 function drawEntryPoint(cell){
@@ -57,8 +62,8 @@ function drawEntryPoint(cell){
 }
 
 function drawPath(cell, element){
-    
-    element.classList.add('path');
+    cell.element.classList.add('path');
+    //element.classList.add('path');
     
    
 }

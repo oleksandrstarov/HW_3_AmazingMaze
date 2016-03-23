@@ -41,12 +41,16 @@ body{
   background: lightgray;
 }
 
-div.entryPoint{
+div.entryPoint.cell{
   background-color: red;
 }
 
 .path{
   background-color: lightgreen;
+}
+
+div.cell.focus{
+  background-color: blue;
 }
 
 

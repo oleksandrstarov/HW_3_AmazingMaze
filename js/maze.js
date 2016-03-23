@@ -1,14 +1,22 @@
 "use strict";
 
-function Maze(dimension){
-    this.dimension = dimension;
-    
-    this.cellsArray = [];
-    this.solution = [];
-}
+class Maze{
+    constructor(size){
+        if(size === 'small'){
+            this.dimension = 21;
+        }
+        if(size === 'medium'){
+            this.dimension = 41;
+        }
+        if(size === 'large'){
+            this.dimension = 61;
+        }
+        this.cellsArray = this.createCells();
+        this.solution = [];
 
-Maze.prototype = {
-    createCells: function(){
+    }
+    
+    createCells(){
         var count = 0;
     
         var cellsArray = [];
@@ -17,148 +25,204 @@ Maze.prototype = {
             cellsArray[i] = [];
             for(var j = 0; j < this.dimension; j++){
                 
-                var cell = new MazeCell(j, i);
+                var cell = new MazeCell(i, j);
                 cellsArray[i][j] = cell;
                 cell.count = count++;
-                
             }
         }
-        //console.log(cellsArray);
-        return this.initMaze(cellsArray);
-    },
+
+        return cellsArray;
+
+    }
     
-    initMaze: function(cellsArray){
-        var path = [];
-        var solution = [];
+    showMazeField(cellsArray){
+        var container = document.querySelector('.mazeContainer');
+        
+        for(var cellX= 0; cellX<cellsArray.length; cellX++){
+            for(var cellY = 0; cellY<cellsArray.length; cellY++){
+                
+                var element = document.createElement('div');
+                element.setAttribute('class', 'cell');
+                cellsArray[cellX][cellY].element = element;
+                container.appendChild(element);
+            }
+        }
+
+        cellsArray[1][1].element.classList.add('entryPoint');
+        cellsArray[cellsArray.length - 2][cellsArray.length - 2].element.classList.add('entryPoint');
+        
+        updateContainer(container, element, cellsArray.length);
+        
+        function updateContainer(container, element, cellsInRow){
+            var elementMargin = 0;
+            container.style.width = (element.offsetWidth + elementMargin) * (cellsInRow) + 'px';
+            container.style.height = container.style.width;
+        }
+
+    }
+    
+    
+    initMaze(cellsArray){
         
         if(cellsArray.length === 0){
             return;
         }
         
-        var x = 1, y = 1;
-        var lastSetX = -1, lastSetY = -1;
-        cellsArray[x][y].wall = false;
+        var totalMazeLength = (cellsArray.length * cellsArray.length - cellsArray.length * 2 - 1)/2;
         
-        path.push(y + y * cellsArray.length);
-        var solutionUncomplete = true;
+        var path = [];
         
-        function generateMaze(x, y){
+        var curretMazeLength = 0;
+        
+        var solutionArray = [];
+        var solutionReady = false;
+        
+        var originalCellX = 1, originalCellY = 1;
+
+
+        removeWall(originalCellX, originalCellY, cellsArray);
+
+        path.push({
+            x:originalCellX, 
+            y:originalCellY
+        });
+        
+        var timerId = setInterval(function(){
             
-            //console.log(x + " " + y); 
-            if(path.length){
-                var availableDirections = getDirections(x, y, cellsArray);
+            generateMaze(originalCellX, originalCellY);
+        }, 50);
+        
+        
+        function generateMaze(cellX, cellY){
+            
+            cellsArray[originalCellX][originalCellY].element.classList.remove('focus');
+
+            if(totalMazeLength > curretMazeLength){
+                var availableDirections = getDirections(cellX, cellY, cellsArray);
                 
                 if(availableDirections){
+                    
                     var step = getRandom(availableDirections.length);
                     
                     switch(availableDirections[step]){
                         case "N":
-                            removeWall(x-2, y, cellsArray);
-                            removeWall(x-1, y, cellsArray);
-                            x -= 2;
+                            removeWall(cellX-1, cellY, cellsArray);
+                            removeWall(cellX-2, cellY, cellsArray);
+                            
+                            cellX -= 2;
                             break;
                         
                         case "S":
-                            removeWall(x+2, y, cellsArray);
-                            removeWall(x+1, y, cellsArray);
-                            x += 2;
+                            removeWall(cellX+1, cellY, cellsArray);
+                            removeWall(cellX+2, cellY, cellsArray);
+                            
+                            cellX += 2;
                             break;
                         
                         case "W":
-                            removeWall(x, y-2, cellsArray);
-                            removeWall(x, y-1, cellsArray);
-                            y -= 2;
+                            removeWall(cellX, cellY-1, cellsArray);
+                            removeWall(cellX, cellY-2, cellsArray);
+                            
+                            cellY -= 2;
                             break;
                         
                         case "E":
-                            removeWall(x, y+2, cellsArray);
-                            removeWall(x, y+1, cellsArray);
-                            y += 2;
+                            removeWall(cellX, cellY+1, cellsArray);
+                            removeWall(cellX, cellY+2, cellsArray);
+                            
+                            cellY += 2;
                             break;
                     }
-                    
-                    path.push(y + x * cellsArray.length);
-                    //solution.push(cellsArray[x][y]);
-                    lastSetX = x;
-                    lastSetY = y;
-                    if(x === cellsArray.length-2 && y === cellsArray.length-2){
-                        //console.info(solutionUncomplete);
-                        solutionUncomplete = false;
-                        //console.info(solutionUncomplete);
+
+                    path.push({
+                        x:cellX,
+                        y:cellY
+                    });
+
+                    if(cellX===cellsArray.length-2 && cellY===cellsArray.length-2){
+                        solutionReady = true;
                     }
-                    //console.log(solution);
                     
+
                 }else{
+
+                    
                     var stepBack = path.pop();
-                    
-                    
-                    x = Math.floor(stepBack / cellsArray.length);
-                    y = stepBack % cellsArray.length;
-                   
-                    //console.log(solutionUncomplete);
-                    if(solutionUncomplete){
-                        if(solution.indexOf(cellsArray[x][y]) >= 0 ){
-                            //console.log(solution.pop());
-                            //console.log(solution.pop());
-                            solution.pop();
-                            solution.pop();
-                            
-    
-    
-    
-                        }
+                    if (stepBack.x === cellX && stepBack.y === cellY) {
+                        stepBack = path[path.length - 1];
+                        console.log("equal");
+                        
                     }
+                        
+                    cellX = stepBack.x;
+                    cellY = stepBack.y;
+
+                    
+                   
+                   
+                    if(solutionReady === false){
+                        solutionArray.pop();
+                        solutionArray.pop();
+                    }
+                    
+
+
                     
                 }
-            generateMaze(x, y);
+            
+                cellsArray[cellX][cellY].element.classList.add('focus');
+                originalCellX = cellX;
+                originalCellY = cellY;
                 
             }
+            else{
+                clearInterval(timerId);
+            }
         }
+
         
-        generateMaze(x, y);
-        this.solution = solution;
-        return cellsArray
-        
-        function getDirections(x, y, cellsArray){
+        function getDirections(cellX, cellY, cellsArray){
             var availableDirections = "";
             
-            if(x+2 > 0 
-                && x+2 < cellsArray.length - 1
-                && cellsArray[x+2][y].wall === true){
+            if( cellX+2 < cellsArray.length - 1
+                && cellsArray[cellX+2][cellY].wall === true){
                 availableDirections += "S";
             }
             
-            if(x-2 > 0 
-                && x-2 < cellsArray.length - 1 
-                && cellsArray[x-2][y].wall === true){
+            if(cellX-2 > 0
+                && cellsArray[cellX-2][cellY].wall === true){
                 availableDirections += "N";
             }
             
-            if(y-2 > 0 
-                && y-2 < cellsArray.length - 1 
-                && cellsArray[x][y-2].wall === true){
+            if(cellY-2 > 0 
+                && cellsArray[cellX][cellY-2].wall === true){
                 availableDirections += "W";
             }
             
-            if(y+2 > 0 
-                && y+2 < cellsArray.length - 1
-                && cellsArray[x][y+2].wall === true){
+            if( cellY+2 < cellsArray.length - 1
+                && cellsArray[cellX][cellY+2].wall === true){
                 availableDirections += "E";
             }
             
             return availableDirections;
         }
         
-        function removeWall(x, y, cellsArray){
-            cellsArray[x][y].wall = false;
-            if(solutionUncomplete){
-                solution.push(cellsArray[x][y]);
+        function removeWall(cellX, cellY, cellsArray){
+            
+            cellsArray[cellX][cellY].wall = false;
+
+            cellsArray[cellX][cellY].element.classList.add('passage');
+            
+            if(solutionReady===false){
+                solutionArray.push(cellsArray[cellX][cellY]);
+                //cellsArray[cellX][cellY].element.classList.add('path');
             }
+            
+            curretMazeLength++;
         }
-        
+
+        this.solution = solutionArray;
     }
     
+}
 
-    
-    
-};

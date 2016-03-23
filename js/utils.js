@@ -1,5 +1,9 @@
 "use strict";
 
 function getRandom(max){
-    return Math.floor(Math.random() * max);
+    var value = Math.floor(Math.random() * max);
+    if(value === max){
+        value = getRandom(max);
+    }
+    return value;
 }
