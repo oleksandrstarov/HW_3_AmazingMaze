@@ -1,0 +1,67 @@
+*{
+  box-sizing: border-box;
+}
+
+
+body{
+  background-color: #f1f1f1;
+  margin-left: 20px;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* IE/Edge */
+  user-select: none;           /* non-prefixed version, currently
+                                  not supported by any browser */
+}
+
+p{
+  font-size: 110%;
+  font-family: Comic Sans, Comic Sans MS, cursive, tahoma;
+}
+
+.btn{
+  font-family: Comic Sans, Comic Sans MS, cursive, tahoma;
+}
+
+.mazeContainer{
+  margin-top: 40px;
+  clear: left;
+}
+
+.entryPoint.cell.passage{
+  background-color: red;
+}
+
+.cell{
+  width: 12px;
+  height: 12px;
+  float: left;
+  background-color: #5bc0de;
+  margin: 0px;
+}
+
+
+.passage{
+  background: lightgray;
+}
+
+
+.path{
+  background-color: lightgreen;
+}
+
+div.cell.focus{
+  background-color: blue;
+}
+
+.gameMenu{
+  float: left;
+  margin-right: 10px;
+  margin-top: 10px;
+}
+
+.hidden{
+  display: none;
+}
+
