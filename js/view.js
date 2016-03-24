@@ -3,7 +3,7 @@
 function hideElement(elementId){
     var element = document.getElementById(elementId);
     if(element){
-        element.setAttribute("hidden", '');
+        element.classList.add('hidden');
     }
     
 }
@@ -11,7 +11,7 @@ function hideElement(elementId){
 function showElement(elementId){
     var element = document.getElementById(elementId);
     if(element){
-         element.removeAttribute("hidden");
+         element.classList.remove('hidden');
     }
    
 }

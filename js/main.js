@@ -14,7 +14,7 @@ function startGeneration(size){
 
 function showPath(){
     maze.showSolution(maze.solution);
-    hideElement('showPath');
+   
     hideElement('gameMenu');
 }
 

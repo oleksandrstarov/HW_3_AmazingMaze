@@ -234,7 +234,7 @@ class Maze{
         
         var timerId = setInterval(function(){
             makeSolutionStep(i);
-        }, this.generationSpeed * 1.5);
+        }, this.generationSpeed * 1.2);
         
         
         
@@ -246,7 +246,9 @@ class Maze{
                 i++;
             }else{
                 clearInterval(timerId);
+
                 showElement('gameMenu');
+                hideElement('showPath');
             }
             
             
