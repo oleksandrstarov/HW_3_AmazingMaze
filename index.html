@@ -4,14 +4,32 @@
     <meta name="author" content="Oleksandr Starov">
     <meta charset="UTF-8">
     <title>Amazing Maze</title>
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
     <link rel="stylesheet" href="./css/style.css" type="text/css" />
     <script type="text/javascript" src="./js/utils.js" defer></script>
+    <script type="text/javascript" src="./js/view.js" defer></script>
     <script type="text/javascript" src="./js/mazeCell.js" defer></script>
     <script type="text/javascript" src="./js/maze.js" defer></script>
     <script type="text/javascript" src="./js/main.js" defer></script>
+    
 </head>
 <body>
-    <h1>Maze Example!</h1>
+    <h1>Maze</h1>
+    <div id="mainMenu">
+        <p>Please select size for a new maze. After a click you will see a required maze size generation process</p>
+        <button id="small" class="btn btn-success" onclick="startGeneration(this.id)"><span class="glyphicon glyphicon-th-large"></span> Small</button>
+        <button id="medium" class="btn btn-warning" onclick="startGeneration(this.id)"><span class="glyphicon glyphicon-th"></span> Medium</button>
+        <button id="large" class="btn btn-danger" onclick="startGeneration(this.id)"><span class="glyphicon glyphicon-qrcode"></span> Large</button>
+    </div>
+   
+    
     <div class="mazeContainer"></div>
+    <div id="gameMenu"  hidden>
+        <button id="reset" class="btn btn-danger gameMenu" onclick="reset()"><span class="glyphicon glyphicon-home"></span> Reset</button>
+        <button id="showPath" class="btn btn-success gameMenu" onclick="showPath()"><i class="glyphicon glyphicon-road"></i> Show Solution</button>
+    </div>
 </body>
 </html>

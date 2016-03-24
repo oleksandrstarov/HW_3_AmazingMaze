@@ -3,13 +3,16 @@
 class Maze{
     constructor(size){
         if(size === 'small'){
-            this.dimension = 21;
+            this.dimension = 15;
+            this.generationSpeed = 100;
         }
         if(size === 'medium'){
-            this.dimension = 41;
+            this.dimension = 25;
+            this.generationSpeed = 60;
         }
         if(size === 'large'){
-            this.dimension = 61;
+            this.dimension = 45;
+            this.generationSpeed = 40;
         }
         this.cellsArray = this.createCells();
         this.solution = [];
@@ -90,7 +93,7 @@ class Maze{
         var timerId = setInterval(function(){
             
             generateMaze(originalCellX, originalCellY);
-        }, 50);
+        }, this.generationSpeed);
         
         
         function generateMaze(cellX, cellY){
@@ -150,8 +153,6 @@ class Maze{
                     var stepBack = path.pop();
                     if (stepBack.x === cellX && stepBack.y === cellY) {
                         stepBack = path[path.length - 1];
-                        console.log("equal");
-                        
                     }
                         
                     cellX = stepBack.x;
@@ -170,13 +171,14 @@ class Maze{
                     
                 }
             
-                cellsArray[cellX][cellY].element.classList.add('focus');
+                cellsArray[cellX][cellY].getElement().classList.add('focus');
                 originalCellX = cellX;
                 originalCellY = cellY;
                 
             }
             else{
                 clearInterval(timerId);
+                showElement('gameMenu');
             }
         }
 
@@ -223,6 +225,37 @@ class Maze{
 
         this.solution = solutionArray;
     }
+    
+    showSolution(solutionArray){
+        if(solutionArray.length === 0){
+            return;
+        }
+        var i = 0;
+        
+        var timerId = setInterval(function(){
+            makeSolutionStep(i);
+        }, this.generationSpeed * 1.5);
+        
+        
+        
+        function makeSolutionStep(index){
+        
+            if(index < solutionArray.length){
+                solutionArray[index].getElement().classList.add('path');
+
+                i++;
+            }else{
+                clearInterval(timerId);
+                showElement('gameMenu');
+            }
+            
+            
+        }
+        
+    }
+    
+    
+    
     
 }
 
