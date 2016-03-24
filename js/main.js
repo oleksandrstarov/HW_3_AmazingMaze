@@ -10,6 +10,7 @@ function startGeneration(size){
     var array = maze.cellsArray;
     maze.showMazeField(array);
     maze.initMaze(array);
+
 }
 
 function showPath(){

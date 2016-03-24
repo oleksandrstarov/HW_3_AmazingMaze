@@ -2,6 +2,7 @@
   box-sizing: border-box;
 }
 
+
 body{
   background-color: #f1f1f1;
   margin-left: 20px;
@@ -14,6 +15,15 @@ body{
                                   not supported by any browser */
 }
 
+p{
+  font-size: 110%;
+  font-family: Comic Sans, Comic Sans MS, cursive, tahoma;
+}
+
+.btn{
+  font-family: Comic Sans, Comic Sans MS, cursive, tahoma;
+}
+
 .mazeContainer{
   margin-top: 40px;
   clear: left;
@@ -22,7 +32,6 @@ body{
 .entryPoint.cell.passage{
   background-color: red;
 }
-
 
 .cell{
   width: 12px;
